@@ -95,7 +95,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	//verifie si la bille a touché une fusée
-	//todo ameliorer la gestion de collision ??
 	public boolean collision(){
 		// for(int i = 0; i < rockets.size(); i++)
 		// {
@@ -139,16 +138,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			int bottomRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
 			int bottomRightCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
 
-			if (rightEdgeBallX > topLeftCornerRocketX && rightEdgeBallY > topLeftCornerRocketY && rightEdgeBallY < bottomLeftCornerRocketY) {
+			if (rightEdgeBallX > topLeftCornerRocketX && leftEdgeBallX < topLeftCornerRocketX && rightEdgeBallY > topLeftCornerRocketY && rightEdgeBallY < bottomLeftCornerRocketY) {
+				Log.d("collision", "bord droit balle");
 				return true;
 			}
-			else if (leftEdgeBallX < topRightCornerRocketX && leftEdgeBallY > topRightCornerRocketY && rightEdgeBallY < bottomRightCornerRocketY) {
+			else if (leftEdgeBallX < topRightCornerRocketX && rightEdgeBallX > topRightCornerRocketX && leftEdgeBallY > topRightCornerRocketY && rightEdgeBallY < bottomRightCornerRocketY) {
+				Log.d("collision", "bord gauche balle");
 				return true;
 			}
-			else if (topEdgeBallY < bottomRightCornerRocketX && topEdgeBallX > bottomRightCornerRocketX && topEdgeBallX < bottomLeftCornerRocketX) {
+			else if (topEdgeBallY < bottomRightCornerRocketY && bottomEdgeBallY > bottomRightCornerRocketY && topEdgeBallX > bottomLeftCornerRocketX && topEdgeBallX < bottomRightCornerRocketX) {
+				Log.d("collision", "bord haut balle");
 				return true;
 			}
-			else if (bottomEdgeBallY > topRightCornerRocketX && bottomEdgeBallY > topLeftCornerRocketX && bottomEdgeBallY < topRightCornerRocketX) {
+			else if (bottomEdgeBallY > topRightCornerRocketY && topEdgeBallY < topRightCornerRocketY && bottomEdgeBallX > topLeftCornerRocketX && bottomEdgeBallX < topRightCornerRocketX) {
+				Log.d("collision", "bord bas balle");
 				return true;
 			}
 		}

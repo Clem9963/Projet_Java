@@ -16,7 +16,7 @@ class Rocket{
 	private int widthRocket, heightRocket; //taille de la fusée
 	private int widthScreen, heightScreen; //taille de l'ecran
 
-	private final int coefficientMouvement = 7; // coefficient pour choisir la vitesse de la fusée
+	private final int coefficientMouvement = 1; // coefficient pour choisir la vitesse de la fusée
 
 	//contexte de l'application pour récuperer les images notamment
 	private final Context mContext;
@@ -49,7 +49,7 @@ class Rocket{
 		return this.heightRocket;
 	}
 
-	//recupere les dimensions de l'ecran et redimentsionnne la fusée
+	//recupere les dimensions de l'ecran et redimensionnne la fusée
 	public void resize() {
 		//chargement de l'image de la fusée
 		Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.rocket);
