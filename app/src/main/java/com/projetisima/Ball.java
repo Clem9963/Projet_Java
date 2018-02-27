@@ -11,7 +11,11 @@ class Ball
 	//image de la balle
 	private BitmapDrawable img = null;
 
+<<<<<<< HEAD
 	private int x = 0, y = 0; 				// coordonnées du coin supérieur gauche la balle
+=======
+	private int x = 1, y = 1; //coordonnées de la balle
+>>>>>>> 13cc31a... Correction du bug du recommencer lors du démarrage de jeu
 	private int widthBall, heightBall, radiusBall; //taille de la balle
 	private int widthScreen, heightScreen; //taille de l'ecran
 
