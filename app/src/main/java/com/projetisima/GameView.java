@@ -97,21 +97,60 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	//verifie si la bille a touché une fusée
 	//todo ameliorer la gestion de collision ??
 	public boolean collision(){
-		for(int i = 0; i < rockets.size(); i++)
-		{
-			int circleDistanceX = Math.abs(balle.getX() - rockets.get(i).getX() - rockets.get(i).getWidthRocket()/2);
-			int circleDistanceY = Math.abs(balle.getY() - rockets.get(i).getY() - rockets.get(i).getHeightRocket()/2);
+		// for(int i = 0; i < rockets.size(); i++)
+		// {
+		// 	int circleDistanceX = Math.abs(balle.getX() - rockets.get(i).getX() - rockets.get(i).getWidthRocket()/2);
+		// 	int circleDistanceY = Math.abs(balle.getY() - rockets.get(i).getY() - rockets.get(i).getHeightRocket()/2);
 
-			if (circleDistanceX > (rockets.get(i).getHeightRocket()/2 + balle.getRadiusBall())) { return false; }
-			if (circleDistanceY > (rockets.get(i).getHeightRocket()/2 + balle.getRadiusBall())) { return false; }
+		// 	if (circleDistanceX > (rockets.get(i).getHeightRocket()/2 + balle.getRadiusBall())) { return false; }
+		// 	if (circleDistanceY > (rockets.get(i).getHeightRocket()/2 + balle.getRadiusBall())) { return false; }
 
-			if (circleDistanceX <= (rockets.get(i).getWidthRocket()/2)) { return true; }
-			if (circleDistanceY <= (rockets.get(i).getHeightRocket()/2)) { return true; }
+		// 	if (circleDistanceX <= (rockets.get(i).getWidthRocket()/2)) { return true; }
+		// 	if (circleDistanceY <= (rockets.get(i).getHeightRocket()/2)) { return true; }
 
-			int cornerDistance_sq = (circleDistanceX - rockets.get(i).getHeightRocket()/2)^2 +
-					(circleDistanceY - rockets.get(i).getHeightRocket()/2)^2;
+		// 	int cornerDistance_sq = (circleDistanceX - rockets.get(i).getHeightRocket()/2)^2 +
+		// 			(circleDistanceY - rockets.get(i).getHeightRocket()/2)^2;
 
-			return (cornerDistance_sq <= (Math.pow(balle.getRadiusBall(), 2)));
+		// 	return (cornerDistance_sq <= (Math.pow(balle.getRadiusBall(), 2)));
+		// }
+		// return false;
+		int topEdgeBallX = balle.getX() + balle.getRadiusBall();
+		int topEdgeBallY = balle.getY();
+
+		int bottomEdgeBallX = balle.getX() + balle.getRadiusBall();
+		int bottomEdgeBallY = balle.getY() + balle.getHeight();
+
+		int leftEdgeBallX = balle.getX();
+		int leftEdgeBallY = balle.getY() + balle.getRadiusBall();
+
+		int rightEdgeBallX = balle.getX() + balle.getWidth();
+		int rightEdgeBallY = balle.getY() + balle.getRadiusBall();
+
+		for (int i = 0; i < rockets.size(); i++) {
+			int topLeftCornerRocketX = rockets.get(i).getX();
+			int topLeftCornerRocketY = rockets.get(i).getY();
+
+			int bottomLeftCornerRocketX = rockets.get(i).getX();
+			int bottomLeftCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+
+			int topRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
+			int topRightCornerRocketY = rockets.get(i).getY();
+
+			int bottomRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
+			int bottomRightCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+
+			if (rightEdgeBallX > topLeftCornerRocketX && rightEdgeBallY > topLeftCornerRocketY && rightEdgeBallY < bottomLeftCornerRocketY) {
+				return true;
+			}
+			else if (leftEdgeBallX < topRightCornerRocketX && leftEdgeBallY > topRightCornerRocketY && rightEdgeBallY < bottomRightCornerRocketY) {
+				return true;
+			}
+			else if (topEdgeBallY < bottomRightCornerRocketX && topEdgeBallX > bottomRightCornerRocketX && topEdgeBallX < bottomLeftCornerRocketX) {
+				return true;
+			}
+			else if (bottomEdgeBallY > topRightCornerRocketX && bottomEdgeBallY > topLeftCornerRocketX && bottomEdgeBallY < topRightCornerRocketX) {
+				return true;
+			}
 		}
 		return false;
 	}

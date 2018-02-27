@@ -11,7 +11,7 @@ class Ball
 	//image de la balle
 	private BitmapDrawable img = null;
 
-	private int x = 0, y = 0; //coordonnées de la balle
+	private int x = 0, y = 0; 				// coordonnées du coin supérieur gauche la balle
 	private int widthBall, heightBall, radiusBall; //taille de la balle
 	private int widthScreen, heightScreen; //taille de l'ecran
 
@@ -28,29 +28,37 @@ class Ball
 	}
 
 	//recupère l'image de la bille
-	public BitmapDrawable setImage(final Context c, final int ressource, final int w, final int h)
-	{
+	public BitmapDrawable setImage(final Context c, final int ressource, final int w, final int h) {
 		Drawable dr = c.getResources().getDrawable(ressource);
 		Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
 		return new BitmapDrawable(c.getResources(), Bitmap.createScaledBitmap(bitmap, w, h, true));
 	}
 
-	public int getX(){
+	public int getX() {
 		return this.x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return this.y;
 	}
 
-	public int getRadiusBall(){
+	public int getRadiusBall() {
 		return this.radiusBall;
 	}
 
-	public void placeMiddle(){
+	public int getWidth() {
+		return this.widthBall;
+	}
+
+	public int getHeight() {
+		return this.heightBall;
+	}
+
+	public void placeMiddle() {
 		x = widthScreen/2;
 		y = heightScreen/2;
 	}
+
 
 	//recupere les dimensions de l'ecran et redimensionnne la bille
 	public void resize(int wScreen, int hScreen) {
