@@ -33,20 +33,24 @@ class Rocket{
 		resize();
 	}
 
-	public int getX(){
+	public int getX() {
 		return this.x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return this.y;
 	}
 
-	public int getWidthRocket(){
+	public int getWidthRocket() {
 		return this.widthRocket;
 	}
 
-	public int getHeightRocket(){
+	public int getHeightRocket() {
 		return this.heightRocket;
+	}
+
+	public Directions getDirection() {
+		return this.direction;
 	}
 
 	//recupere les dimensions de l'ecran et redimensionnne la fusée
@@ -58,7 +62,7 @@ class Rocket{
 		//par defaut l'image de la fusée est dirigée vers le haut
 		Matrix mat = new Matrix();
 
-		switch (this.direction){
+		switch (this.direction) {
 			case RIGHT:
 				mat.postRotate(90);
 				break;
