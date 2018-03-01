@@ -120,14 +120,35 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			int topLeftCornerRocketX = rockets.get(i).getX();
 			int topLeftCornerRocketY = rockets.get(i).getY();
 
-			int bottomLeftCornerRocketX = rockets.get(i).getX();
-			int bottomLeftCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+			int bottomLeftCornerRocketX = 0;
+			int bottomLeftCornerRocketY = 0;
 
-			int topRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
-			int topRightCornerRocketY = rockets.get(i).getY();
+			int topRightCornerRocketX = 0;
+			int topRightCornerRocketY = 0;
 
-			int bottomRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
-			int bottomRightCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+			int bottomRightCornerRocketX = 0;
+			int bottomRightCornerRocketY = 0;
+
+			if (rockets.get(i).getDirection() == Directions.TOP || rockets.get(i).getDirection() == Directions.BOTTOM) {
+				bottomLeftCornerRocketX = rockets.get(i).getX();
+				bottomLeftCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+
+				topRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
+				topRightCornerRocketY = rockets.get(i).getY();
+
+				bottomRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getWidthRocket();
+				bottomRightCornerRocketY = rockets.get(i).getY() + rockets.get(i).getHeightRocket();
+			}
+			else {
+				bottomLeftCornerRocketX = rockets.get(i).getX();
+				bottomLeftCornerRocketY = rockets.get(i).getY() + rockets.get(i).getWidthRocket();
+
+				topRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getHeightRocket();
+				topRightCornerRocketY = rockets.get(i).getY();
+
+				bottomRightCornerRocketX = rockets.get(i).getX() + rockets.get(i).getHeightRocket();
+				bottomRightCornerRocketY = rockets.get(i).getY() + rockets.get(i).getWidthRocket();
+			}
 
 			/* Traitement de la collision de la balle avec les bords de la bounding box de la fusée */
 
@@ -148,48 +169,22 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				return true;
 			}
 
-			/* Traitement de la collision de la balle avec certains coins de la bounding box de la fusée */
-			switch (rockets.get(i).getDirection()) {
-				case TOP:
-					if (distance(centerBallX, centerBallY, bottomLeftCornerRocketX, bottomLeftCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin bas gauche bounding box fusée");
-						return true;
-					}
-					else if (distance(centerBallX, centerBallY, bottomRightCornerRocketX, bottomRightCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin bas droit bounding box fusée");
-						return true;
-					}
-					break;
-				case RIGHT:
-					if (distance(centerBallX, centerBallY, topLeftCornerRocketX, topLeftCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin haut gauche bounding box fusée");
-						return true;
-					}
-					else if (distance(centerBallX, centerBallY, bottomLeftCornerRocketX, bottomLeftCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin bas gauche bounding box fusée");
-						return true;
-					}
-					break;
-				case BOTTOM:
-					if (distance(centerBallX, centerBallY, topLeftCornerRocketX, topLeftCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin haut gauche bounding box fusée");
-						return true;
-					}
-					else if (distance(centerBallX, centerBallY, topRightCornerRocketX, topRightCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin haut droit bounding box fusée");
-						return true;
-					}
-					break;
-				case LEFT:
-					if (distance(centerBallX, centerBallY, topRightCornerRocketX, topRightCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin haut droit bounding box fusée");
-						return true;
-					}
-					else if (distance(centerBallX, centerBallY, bottomRightCornerRocketX, bottomRightCornerRocketY) < balle.getRadiusBall()) {
-						Log.d("collision", "coin bas droit bounding box fusée");
-						return true;
-					}
-					break;
+			/* Traitement de la collision de la balle avec les coins de la bounding box de la fusée */
+			if (distance(centerBallX, centerBallY, bottomLeftCornerRocketX, bottomLeftCornerRocketY) < balle.getRadiusBall()) {
+				Log.d("collision", "coin bas gauche bounding box fusée");
+				return true;
+			}
+			else if (distance(centerBallX, centerBallY, bottomRightCornerRocketX, bottomRightCornerRocketY) < balle.getRadiusBall()) {
+				Log.d("collision", "coin bas droit bounding box fusée");
+				return true;
+			}
+			if (distance(centerBallX, centerBallY, topLeftCornerRocketX, topLeftCornerRocketY) < balle.getRadiusBall()) {
+				Log.d("collision", "coin haut gauche bounding box fusée");
+				return true;
+			}
+			else if (distance(centerBallX, centerBallY, topRightCornerRocketX, topRightCornerRocketY) < balle.getRadiusBall()) {
+				Log.d("collision", "coin haut droit bounding box fusée");
+				return true;
 			}
 		}
 		return false;
