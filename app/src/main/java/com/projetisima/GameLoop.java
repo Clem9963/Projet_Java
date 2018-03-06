@@ -1,6 +1,7 @@
 package com.projetisima;
 
 import android.graphics.Canvas;
+import android.util.Log;
 
 public class GameLoop extends Thread
 {
@@ -57,11 +58,12 @@ public class GameLoop extends Thread
 
 			// Calcul du temps de pause, et pause si nécessaire
 			// afin de ne réaliser le travail ci-dessus que X fois par secondes
-			sleepTime = SKIP_TICKS-(System.currentTimeMillis() - startTime);
+			sleepTime = SKIP_TICKS - (System.currentTimeMillis() - startTime);
 			try {
 				if (sleepTime >= 0) {sleep(sleepTime);}
 			}
 			catch (Exception e) {}
 		}
+		return;
 	}
 }

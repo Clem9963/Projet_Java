@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private GameView gameView;
 	private Ball player;
-	private Time time;
+	private Score score;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 		//création de gameview qui est le code principal du jeu et qui gère les elements
 		gameView = new GameView(this, dimensions.widthPixels, dimensions.heightPixels);
 		player = gameView.getBall();
-		time = gameView.getTime();
+		score = gameView.getScore();
 
 		// afichage du gameView
 		setContentView(gameView);
@@ -54,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
 		//lancement du timer
 		startTimer();
+	}
+
+	//si on appuie sur la touche retour pendant que l'on joue
+	@Override
+	public void onBackPressed() {
+	    t.cancel();
+	    task.cancel();
+        MainActivity.this.finish();
 	}
 
 	//boucle qui détecte les changements de l'accéléromètre
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 				t.cancel();
 				task.cancel();
 				mSensorManager.unregisterListener(mSensorListener);//on bloque la reception de l'acceleromètre
-				gameView.setRunningGameLoop(false); //stoppe le thread = empeche les elements de se déplacer
+				gameView.setRunningGameLoop(true); //stoppe le thread = empeche les elements de se déplacer
 				dialogBox(); //on affiche la boite de dialogue
 			}
 			//sinon la bille se déplace
@@ -116,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
 					@Override
 					public void run() {
-						time.setTime(secondesTotal); // affiche le temps de jeu
+						score.setScore(secondesTotal); // affiche le temps de jeu
 
 						if(secondes == 5)
 						{
@@ -145,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 		Activity activity = this; // récupération de l'Activity courante
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage("Vous avez perdu !!!");
-		builder.setPositiveButton("Quitter", new DialogInterface.OnClickListener() { // définition de la callback pour la réponse Oui
+		builder.setPositiveButton("Retour au menu", new DialogInterface.OnClickListener() { // définition de la callback pour la réponse Oui
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				MainActivity.this.finish();
@@ -156,15 +164,15 @@ public class MainActivity extends AppCompatActivity {
 			public void onClick(DialogInterface dialog, int which) {
 				//relance l'aceleromètre, le thread et le temps
 				mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+
+                player.placeMiddle(); //replace la balle au centre
 				gameView.setRunningGameLoop(true); //on redemarre le thread
 
 				//met les temps à 0
 				secondes = 0;
 				secondesTotal = 0;
-				time.setTime(0);
+				score.setScore(0);
 				startTimer();
-
-				player.placeMiddle(); //replace la balle au centre
 			}
 		});
 		builder.show();
