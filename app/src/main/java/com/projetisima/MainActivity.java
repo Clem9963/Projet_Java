@@ -2,6 +2,7 @@ package com.projetisima;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -126,20 +128,34 @@ public class MainActivity extends AppCompatActivity {
 					public void run() {
 						score.setScore(secondesTotal); // affiche le temps de jeu
 
-						if(secondes == 5)
-						{
-							Log.d("test", "lancement fusée");
-							gameView.addRocket();
-							t.cancel();
-							task.cancel();
-							secondes = 0;
-							startTimer();
+						//si l'activité est au premier plan
+						if(MainActivity.this.getWindow().getDecorView().getRootView().isShown()) {
+
+                            //l'augmentation de la difficulté ce fait dans le for
+						    for(int i = 0; i < secondesTotal; i = i + 5)
+                            {
+                                gameView.addRocket();
+                            }
+
+							if (secondes == 5) {
+								Log.d("test", "lancement fusée");
+								gameView.addRocket();
+								t.cancel();
+								task.cancel();
+								secondes = 0;
+								startTimer();
+							} else {
+								Log.d("test", "t = " + secondes);
+								secondes++;
+								secondesTotal++;
+							}
 						}
+						//sinon on arrete le temps de jeu
 						else
 						{
-							Log.d("test", "t = " + secondes);
-							secondes++;
-							secondesTotal++;
+							t.cancel();
+							task.cancel();
+							MainActivity.this.finish();
 						}
 					}
 				});
@@ -175,6 +191,29 @@ public class MainActivity extends AppCompatActivity {
 				startTimer();
 			}
 		});
+
+        //si c'est le meilleur temps du joueur on affiche le troisième choix
+        SharedPreferences preferences = getSharedPreferences("parametres", 0);
+        int scoreJoueur = preferences.getInt("score", 0);
+        Log.d("score : ", "scoreNow  :" + score.getScore() + " scoreJoueur :  " + scoreJoueur);
+        if(score.getScore() > scoreJoueur)
+        {
+            builder.setNeutralButton("Enregistrer le score", new DialogInterface.OnClickListener() { // définition de la callback pour la réponse Oui
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    envoiScoreBDD();
+                    MainActivity.this.finish();
+                }
+            });
+        }
 		builder.show();
 	}
+
+	private void envoiScoreBDD(){
+        SharedPreferences preferences = getSharedPreferences("parametres", 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("score", score.getScore());
+        editor.commit();
+        Toast.makeText(getApplicationContext(), "L'envoi de votre score a réussi", Toast.LENGTH_LONG).show();
+    }
 }

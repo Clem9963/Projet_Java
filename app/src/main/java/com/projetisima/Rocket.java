@@ -16,7 +16,7 @@ class Rocket{
 	private int widthRocket, heightRocket; //taille de la fusée
 	private int widthScreen, heightScreen; //taille de l'ecran
 
-	private final int coefficientMouvement = 1; // coefficient pour choisir la vitesse de la fusée
+	private int coefficientMouvement = 5; // coefficient pour choisir la vitesse de la fusée
 
 	//contexte de l'application pour récuperer les images notamment
 	private final Context mContext;
@@ -51,6 +51,10 @@ class Rocket{
 
 	public Directions getDirection() {
 		return this.direction;
+	}
+
+	public void setCoefficientMouvement(int coefficientMouvement){
+		this.coefficientMouvement = coefficientMouvement;
 	}
 
 	//recupere les dimensions de l'ecran et redimensionnne la fusée
