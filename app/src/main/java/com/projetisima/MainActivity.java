@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private SensorManager mSensorManager; // pour recuperer les changements de l'acceleromètre
 
-	int x, y; // les variables pour l'accéléromètre
+	float x, y; // les variables pour l'accéléromètre
 
 	Timer t;
 	TimerTask task;
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
 		public void onSensorChanged(SensorEvent se)
 		{
-			x = (int)se.values[0];
-			y = (int)se.values[1];
+			x = se.values[0];
+			y = se.values[1];
 
 			//si la bille est au bord de l'ecran alors le joueur a perdu
 			if(player.outScreen() || gameView.collision())
@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity {
 			else {
 				//déplacement de la bille en largeur
 				if (x != 0) {
-					player.moveOnX(-1 * x);
+					player.moveX(-1 * x);		// Le -1 permet de se faire déplacer la bille dans le bon sens
 				}
 				//déplacement de la bille en hauteur
 				if (y != 0) {
-					player.moveOnY(y);
+					player.moveY(y);
 				}
 			}
 		}
