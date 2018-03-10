@@ -25,8 +25,12 @@ public class Menu extends AppCompatActivity {
         //recuperation du pseudo si celui ci existe
         SharedPreferences preferences = getSharedPreferences("parametres", 0);
         String p = preferences.getString("pseudo", "erreur");
-        pseudo.setText(p);
 
+        if(!p.equals("erreur"))
+        {
+            pseudo.setText(p);
+        }
+    
         play.setOnClickListener(playListener);
         score.setOnClickListener(scoreListener);
     }
