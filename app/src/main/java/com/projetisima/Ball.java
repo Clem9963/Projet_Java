@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import static java.lang.Math.*;
 
 class Ball
 {
@@ -27,9 +28,10 @@ class Ball
 	private int widthScreen, heightScreen;			// Taille de l'ecran
 >>>>>>> c5d2926... Amélioration légère de la physique de la balle.
 
-	private final int divisionBall = 10;			// coefficient pour choisir la taille de la bille
-	private final int sensoryCoefficient = 5;		// coefficient pour appréhender les valeurs fournies par l'accéléromètre
-	private final float inertiaCoefficient = 0.7f;	// coefficient pour l'inertie
+	private final int divisionBall = 10;						// Coefficient pour choisir la taille de la bille
+	private final int sensoryCoefficient = 5;					// Coefficient pour appréhender les valeurs fournies par l'accéléromètre
+	private final float inertiaCoefficient = 0.3f;				// Coefficient pour l'inertie
+	private final float dispersionCoefficient = 1.5f;	// Coefficient pour la dispersion de l'inertie
 
 	//contexte de l'application pour récuperer les images notamment
 	private final Context mContext;
@@ -68,8 +70,14 @@ class Ball
 	}
 
 	public void placeMiddle() {
-		x = widthScreen/2;
-		y = heightScreen/2;
+		this.x = widthScreen / 2;
+		this.y = heightScreen / 2;
+
+		this.previousX = this.x;
+		this.previousY = this.y;
+		
+		this.inertiaX = 0;
+		this.inertiaY = 0;
 	}
 
 
@@ -93,28 +101,28 @@ class Ball
 	public void moveX(float x){
 		x = x * this.sensoryCoefficient;
 
+		this.x = round(this.x + x + this.inertiaX/dispersionCoefficient);
+		this.y = round(this.y + this.inertiaY/dispersionCoefficient);
+
+		this.inertiaX = round((this.x - this.previousX) * this.inertiaCoefficient + this.inertiaX/dispersionCoefficient);
+		this.inertiaY = round((this.y - this.previousY) * this.inertiaCoefficient + this.inertiaY/dispersionCoefficient);
+
 		this.previousX = this.x;
 		this.previousY = this.y;
-
-		this.x = this.x + (int)x + this.inertiaX;
-		this.y = this.y + this.inertiaY;
-
-		this.inertiaX = (int)((this.x - this.previousX) * this.inertiaCoefficient);
-		this.inertiaY = (int)((this.y - this.previousY) * this.inertiaCoefficient);
 	}
 
 	//deplace la bille suivant la hauteur
 	public void moveY(float y){
-		y = y* this.sensoryCoefficient;
+		y = y * this.sensoryCoefficient;
+
+		this.y = round(this.y + y + this.inertiaY/dispersionCoefficient);
+		this.x = round(this.x + this.inertiaX/dispersionCoefficient);
+
+		this.inertiaX = round((this.x - this.previousX) * this.inertiaCoefficient + this.inertiaX/dispersionCoefficient);
+		this.inertiaY = round((this.y - this.previousY) * this.inertiaCoefficient + this.inertiaY/dispersionCoefficient);
 
 		this.previousX = this.x;
 		this.previousY = this.y;
-
-		this.y = this.y + (int)y + this.inertiaY;
-		this.x = this.x + this.inertiaX;
-
-		this.inertiaX = (int)((this.x - this.previousX) * this.inertiaCoefficient);
-		this.inertiaY = (int)((this.y - this.previousY) * this.inertiaCoefficient);
 	}
 
 	//verifie si la balle a touché un coté de l'ecran

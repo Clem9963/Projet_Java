@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
 				mSensorManager.unregisterListener(mSensorListener);//on bloque la reception de l'acceleromètre
 				gameView.setRunningGameLoop(true); //stoppe le thread = empeche les elements de se déplacer
 				dialogBox(); //on affiche la boite de dialogue
+				player.placeMiddle();
 			}
 			//sinon la bille se déplace
 			else {
