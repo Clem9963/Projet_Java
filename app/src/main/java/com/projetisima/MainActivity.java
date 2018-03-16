@@ -2,7 +2,6 @@ package com.projetisima;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -12,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +18,7 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
 	private SensorManager mSensorManager; // pour recuperer les changements de l'acceleromètre
+    private final int sizeTable = 10;
 
 	float x, y; // les variables pour l'accéléromètre
 
@@ -84,9 +83,11 @@ public class MainActivity extends AppCompatActivity {
 				gameView.setRunningGameLoop(true); //stoppe le thread = empeche les elements de se déplacer
 				dialogBox(); //on affiche la boite de dialogue
 				player.placeMiddle();
+				gameView.removeAllRockets();
 			}
 			//sinon la bille se déplace
 			else {
+			    Log.d("changement", "00000000000000000000000000000000000");
 				//déplacement de la bille en largeur
 				if (x != 0) {
 					player.moveX(-1 * x);		// Le -1 permet de se faire déplacer la bille dans le bon sens
@@ -130,8 +131,7 @@ public class MainActivity extends AppCompatActivity {
 						score.setScore(secondesTotal); // affiche le temps de jeu
 
 						//si l'activité est au premier plan
-						if(MainActivity.this.getWindow().getDecorView().getRootView().isShown()) {
-
+						if(MainActivity.this.getWindow().getDecorView().getRootView().isShown()){
                             //l'augmentation de la difficulté ce fait dans le for
 						    for(int i = 0; i < secondesTotal; i = i + 5)
                             {
@@ -167,6 +167,12 @@ public class MainActivity extends AppCompatActivity {
 
 	//boite de dialogue si le joueur a touche un cote de l'ecran  ou une fusée
 	public void dialogBox () {
+	    //enregistrement du score dans la base de donnée locale
+        saveScoreLocal();
+
+        //enregistrement du score dans la base de donnée distante si on peut
+
+
 		Activity activity = this; // récupération de l'Activity courante
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 		builder.setMessage("Vous avez perdu !!!");
@@ -193,28 +199,30 @@ public class MainActivity extends AppCompatActivity {
 			}
 		});
 
-        //si c'est le meilleur temps du joueur on affiche le troisième choix
-        SharedPreferences preferences = getSharedPreferences("parametres", 0);
-        int scoreJoueur = preferences.getInt("score", 0);
-        Log.d("score : ", "scoreNow  :" + score.getScore() + " scoreJoueur :  " + scoreJoueur);
-        if(score.getScore() > scoreJoueur)
-        {
-            builder.setNeutralButton("Enregistrer le score", new DialogInterface.OnClickListener() { // définition de la callback pour la réponse Oui
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    envoiScoreBDD();
-                    MainActivity.this.finish();
-                }
-            });
-        }
 		builder.show();
 	}
 
-	private void envoiScoreBDD(){
-        SharedPreferences preferences = getSharedPreferences("parametres", 0);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("score", score.getScore());
-        editor.commit();
-        Toast.makeText(getApplicationContext(), "L'envoi de votre score a réussi", Toast.LENGTH_LONG).show();
+	private void saveScoreLocal(){
+        ScoreLocalManager m = new ScoreLocalManager(this); // gestionnaire de la table "animal"
+        m.open(); // ouverture de la table en lecture/écriture
+
+        Long millis = System.currentTimeMillis();
+
+        //recuperation du score minimum
+        ScoreLocal sc = m.getScoreLocalMin();
+
+        //insertion si le score est superieur au score minimum
+        if(score.getScore() > sc.getScore() || m.getNbTables() <= sizeTable){
+            m.addScoreLocal(new ScoreLocal(0, millis, score.getScore()));
+        }
+
+        //suppression du score minimum si la table est remplit
+        if(m.getNbTables() > sizeTable)
+        {
+            m.removeScoreLocal(sc);
+        }
+        // fermeture du gestionnaire
+        m.close();
     }
+
 }

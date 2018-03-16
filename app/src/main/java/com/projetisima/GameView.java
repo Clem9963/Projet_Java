@@ -117,7 +117,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		int centerBallX = balle.getX() + balle.getRadiusBall();
 		int centerBallY = balle.getY() + balle.getRadiusBall();
 
-		for (int i = 0; i < rockets.size(); i++) {
+		for(int i = 0; i < rockets.size(); i++) {
 			int topLeftCornerRocketX = rockets.get(i).getX();
 			int topLeftCornerRocketY = rockets.get(i).getY();
 
@@ -233,6 +233,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
+	public void removeAllRockets(){
+        rockets.clear();
+    }
 	// Fonction obligatoire de l'objet SurfaceView qui va lancer le thread du jeu
 	@Override
 	public void surfaceCreated(SurfaceHolder surfaceHolder) {

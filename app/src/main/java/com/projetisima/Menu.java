@@ -18,18 +18,9 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        score = (Button) findViewById(R.id.score);
-        play = (Button) findViewById(R.id.play);
-        pseudo = (EditText) findViewById(R.id.pseudo);
-
-        //recuperation du pseudo si celui ci existe
-        SharedPreferences preferences = getSharedPreferences("parametres", 0);
-        String p = preferences.getString("pseudo", "erreur");
-
-        if(!p.equals("erreur"))
-        {
-            pseudo.setText(p);
-        }
+        score =  findViewById(R.id.score);
+        play =  findViewById(R.id.play);
+        pseudo =  findViewById(R.id.pseudo);
     
         play.setOnClickListener(playListener);
         score.setOnClickListener(scoreListener);
@@ -39,20 +30,12 @@ public class Menu extends AppCompatActivity {
     private View.OnClickListener playListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String text = pseudo.getText().toString();
+            String p = pseudo.getText().toString();
 
             SharedPreferences preferences = getSharedPreferences("parametres", 0);
-            String p = preferences.getString("pseudo", "");
-
-            if(!text.equals("")) {
-                if (!text.equals(p)) {
-                    //on sauvegarde le pseudo et met le score à 0 dans les shared preferences
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("pseudo", text);
-                    editor.putInt("score", 0);
-                    editor.commit();
-                }
-            }
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("pseudo", p);
+            editor.commit();
 
             Intent intent = new Intent(Menu.this, MainActivity.class);
             startActivity(intent);
@@ -63,7 +46,7 @@ public class Menu extends AppCompatActivity {
     private View.OnClickListener scoreListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Menu.this, HighScore.class);
+            Intent intent = new Intent(Menu.this, ScoreLocauxActivity.class);
             startActivity(intent);
         }
     };

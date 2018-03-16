@@ -1,5 +1,6 @@
 package com.projetisima;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,17 +12,17 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HighScore extends AppCompatActivity{
+public class ScoreLocauxActivity extends AppCompatActivity{
 
     //pour le recycler view
     private RecyclerView highScore;
-    private List listHighScore = new ArrayList<Person>();
-    private AdapterHighScore mAdapter;
+    private List listScoreLocaux = new ArrayList<ScoreLocal>();
+    private AdapterScoreLocaux mAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_highscore);
+        setContentView(R.layout.activity_score_locaux);
 
         // afficher fleche de retour
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -32,7 +33,7 @@ public class HighScore extends AppCompatActivity{
         highScore = (RecyclerView) findViewById(R.id.highScore);
 
         //affichage de l'adapter
-        mAdapter = new AdapterHighScore(listHighScore);
+        mAdapter = new AdapterScoreLocaux(listScoreLocaux);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         highScore.setLayoutManager(mLayoutManager);
         highScore.setItemAnimator(new DefaultItemAnimator());
@@ -62,7 +63,25 @@ public class HighScore extends AppCompatActivity{
     }
 
     private void loadHighScore(){
-        listHighScore.add(new Person("pseudo1", 125, 1));
-        listHighScore.add(new Person("pseudo2", 1202, 2));
+        ScoreLocalManager m = new ScoreLocalManager(this); // gestionnaire de la table "animal"
+        m.open(); // ouverture de la table en lecture/écriture
+
+        // Listing des enregistrements de la table
+        Cursor c = m.getAllScoreLocal();
+        int i = 1;
+        if (c.moveToFirst())
+        {
+            do {
+                listScoreLocaux.add(new ScoreLocal(i,
+                        c.getLong(c.getColumnIndex(ScoreLocalManager.KEY_DATE)),
+                        c.getInt(c.getColumnIndex(ScoreLocalManager.KEY_SCORE))));
+                i++;
+            }
+            while (c.moveToNext());
+        }
+        c.close(); // fermeture du curseur
+
+        // fermeture du gestionnaire
+        m.close();
     }
 }
