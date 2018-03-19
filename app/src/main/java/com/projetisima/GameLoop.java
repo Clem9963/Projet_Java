@@ -1,7 +1,6 @@
 package com.projetisima;
 
 import android.graphics.Canvas;
-import android.util.Log;
 
 public class GameLoop extends Thread
 {

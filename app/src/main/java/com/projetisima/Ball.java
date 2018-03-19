@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import static java.lang.Math.*;
 
@@ -72,9 +71,8 @@ class Ball
 	}
 
 	public void placeMiddle() {
-	    Log.d("plcaemiddle", "oui");
-		this.x = widthScreen / 2;
-		this.y = heightScreen / 2;
+		this.x = this.widthScreen / 2;
+		this.y = this.heightScreen / 2;
 
 		this.previousX = this.x;
 		this.previousY = this.y;
@@ -85,34 +83,34 @@ class Ball
 
 	//recupere les dimensions de l'ecran et redimensionnne la bille
 	public void resize(int wScreen, int hScreen) {
-		widthScreen = wScreen;
-		heightScreen = hScreen;
-		Log.d("rezise1", "x : " + x);
-		x = wScreen/2;
-        Log.d("rezise2", "x : " + x);
-		y = hScreen/2;
+        this.widthScreen = wScreen;
+        this.heightScreen = hScreen;
+        this.x = wScreen/2;
+        this.y = hScreen/2;
+
+		this.previousX = this.x;
+		this.previousY = this.y;
 
 		// definition de la taille de la bille
-		widthBall = wScreen/divisionBall;
-		heightBall = wScreen/divisionBall; // car balle est un cercle et non un ellipse d'ou le "wScreen" deux fois
-		img = setImage(mContext, R.drawable.ball, widthBall, heightBall);
+        this.widthBall = wScreen/this.divisionBall;
+        this.heightBall = wScreen/this.divisionBall; // car balle est un cercle et non un ellipse d'ou le "wScreen" deux fois
+        this.img = setImage(this.mContext, R.drawable.ball, this.widthBall, this.heightBall);
 
 		//calcul du rayon de la bille
-		radiusBall = widthBall/2;
+        this.radiusBall = this.widthBall/2;
 	}
 
 	//deplace la bille suivant la largeur
 	public void moveX(float x){
 		x = x * this.sensoryCoefficient;
 
-        Log.d("moveX1", " x : " + this.x);
 		this.x = round(this.x + x + this.inertiaX/dispersionCoefficient);
 
-        Log.d("moveX2", " x : " + this.x);
 		this.y = round(this.y + this.inertiaY/dispersionCoefficient);
 
 		this.inertiaX = round((this.x - this.previousX) * this.inertiaCoefficient + this.inertiaX/dispersionCoefficient);
 		this.inertiaY = round((this.y - this.previousY) * this.inertiaCoefficient + this.inertiaY/dispersionCoefficient);
+
 
 		this.previousX = this.x;
 		this.previousY = this.y;
@@ -123,9 +121,8 @@ class Ball
 		y = y * this.sensoryCoefficient;
 
 		this.y = round(this.y + y + this.inertiaY/dispersionCoefficient);
-        Log.d("moveY1", " x : " + this.x);
+
 		this.x = round(this.x + this.inertiaX/dispersionCoefficient);
-        Log.d("moveY2", " x : " + this.x);
 
 		this.inertiaX = round((this.x - this.previousX) * this.inertiaCoefficient + this.inertiaX/dispersionCoefficient);
 		this.inertiaY = round((this.y - this.previousY) * this.inertiaCoefficient + this.inertiaY/dispersionCoefficient);
@@ -136,14 +133,11 @@ class Ball
 
 	//verifie si la balle a touché un coté de l'ecran
 	public boolean outScreen(){
-		if(x + widthBall > widthScreen || x <= 0) {
-			Log.d("test1","oui");
-			Log.d("reponse", "x : " + x + " , widthball " + widthBall + " , widthscreen : " + widthScreen);
+		if(this.x + this.widthBall > this.widthScreen || this.x <= 0) {
 			return true;
 		}
 
-		if(y + heightBall > heightScreen || y <= 0) {
-			Log.d("test2","oui");
+		if(this.y + this.heightBall > this.heightScreen || this.y <= 0) {
 			return true;
 		}
 		return false;
@@ -152,7 +146,7 @@ class Ball
 	// on dessine la bille
 	public void draw(Canvas canvas)
 	{
-		if(img == null) {return;}
-		canvas.drawBitmap(img.getBitmap(), x, y, null);
+		if(this.img == null) {return;}
+		canvas.drawBitmap(this.img.getBitmap(), this.x, this.y, null);
 	}
 }

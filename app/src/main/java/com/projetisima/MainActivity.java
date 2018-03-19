@@ -80,14 +80,13 @@ public class MainActivity extends AppCompatActivity {
 				t.cancel();
 				task.cancel();
 				mSensorManager.unregisterListener(mSensorListener);//on bloque la reception de l'acceleromètre
-				gameView.setRunningGameLoop(true); //stoppe le thread = empeche les elements de se déplacer
+				gameView.setRunningGameLoop(false); //stoppe le thread = empeche les elements de se déplacer
 				dialogBox(); //on affiche la boite de dialogue
 				player.placeMiddle();
 				gameView.removeAllRockets();
 			}
 			//sinon la bille se déplace
 			else {
-			    Log.d("changement", "00000000000000000000000000000000000");
 				//déplacement de la bille en largeur
 				if (x != 0) {
 					player.moveX(-1 * x);		// Le -1 permet de se faire déplacer la bille dans le bon sens
