@@ -21,6 +21,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private GameLoop gameLoopThread;
 	private Ball balle;
+	private Border border;
 	private ArrayList<Rocket> rockets; //tableau des fusées
 	private Score score; // pour la gestion du temps
 
@@ -36,10 +37,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		super(context);
 		getHolder().addCallback(this);
 
-		balle = new Ball(this.getContext());
-		rockets = new ArrayList();
 		this.widthScreen = width;
-		this.heightScreen = height;
+		this.heightScreen = height - 76;			// TODO : Constante (76) mise à la zob pour pallier la barre de notifications, A modifier rapidement !!
+
+		balle = new Ball(this.getContext());
+		border = new Border(this.getContext(), widthScreen, heightScreen);
+		rockets = new ArrayList();
 
 		//ajout des coordonnées possibles pour les fusées en x et en y suivant la taille de l'écran
 		for(int i = 0; i < width; i = i + this.widthRocket){
@@ -116,6 +119,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		int centerBallX = balle.getX() + balle.getRadiusBall();
 		int centerBallY = balle.getY() + balle.getRadiusBall();
+
+		if ((topEdgeBallY < border.getyBorder()) || (bottomEdgeBallY > heightScreen - border.getyBorder()) ||
+				(leftEdgeBallX < border.getxBorder()) || (rightEdgeBallX > widthScreen - border.getxBorder())) {
+			Log.d("collision", "en bord d'écran");
+			return true;
+		}
 
 		for(int i = 0; i < rockets.size(); i++) {
 			int topLeftCornerRocketX = rockets.get(i).getX();
@@ -202,6 +211,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// on dessine la balle
 		balle.draw(canvas);
+		border.draw(canvas);
 
 		//on dessine les fusées
 		for(int i = 0; i < rockets.size(); i++){
@@ -263,6 +273,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder surfaceHolder, int indice, int width, int height) {
 		balle.resize(width, height); // on définit la taille de la balle selon la taille de l'écran
+		border.resize();
 		for(int i = 0; i < rockets.size(); i++){
 			rockets.get(i).resize();
 		}
