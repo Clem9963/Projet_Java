@@ -7,22 +7,23 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
 
-class Rocket{
+public class Rocket{
 	//image de la fusée
-	private Bitmap img = null;
+	protected Bitmap img = null;
+    protected Bitmap bmp;
 
-	Directions direction;
-	private int x = 0, y = 0; //coordonnées de la fusée
+    Directions direction;
+	protected int x = 0, y = 0; //coordonnées de la fusée
 	private int widthRocket, heightRocket; //taille de la fusée
 	private int widthScreen, heightScreen; //taille de l'ecran
 
-	private int coefficientMouvement = 5; // coefficient pour choisir la vitesse de la fusée
+	protected int coefficientMouvement = 5; // coefficient pour choisir la vitesse de la fusée
 
 	//contexte de l'application pour récuperer les images notamment
 	private final Context mContext;
 
 	// Constructeur de la fusée
-	public Rocket(final Context c, Directions d, int XStart, int YStart, int widthScreen, int heightScreen)
+	public Rocket(final Context c, Directions d, int XStart, int YStart, int widthScreen, int heightScreen, int pathRocketImage)
 	{
 		this.mContext = c;
 		this.direction = d;
@@ -30,6 +31,7 @@ class Rocket{
 		this.y = YStart;
 		this.widthScreen = widthScreen;
 		this.heightScreen = heightScreen;
+		this.bmp = BitmapFactory.decodeResource(c.getResources(), pathRocketImage);
 		resize();
 	}
 
@@ -53,15 +55,11 @@ class Rocket{
 		return this.direction;
 	}
 
-	public void setCoefficientMouvement(int coefficientMouvement){
-		this.coefficientMouvement = coefficientMouvement;
-	}
+	//fonction qui ne fait rien mais permet l'accès aux méthodes move() des fusées filles
+	public void move(){}
 
 	//recupere les dimensions de l'ecran et redimensionnne la fusée
 	public void resize() {
-		//chargement de l'image de la fusée
-		Bitmap bmp = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.rocket);
-
 		//met l'image dans le bon sens en fonction de la direction de la fusée
 		//par defaut l'image de la fusée est dirigée vers le haut
 		Matrix mat = new Matrix();
@@ -82,24 +80,6 @@ class Rocket{
 		// definition de la taille de la fusée
 		widthRocket = bmp.getWidth();
 		heightRocket = bmp.getHeight();
-	}
-
-	//deplace la fusée suivant la largeur
-	public void move(){
-		switch (this.direction){
-			case RIGHT:
-				this.x = this.x + coefficientMouvement;
-				break;
-			case BOTTOM:
-				this.y = this.y + coefficientMouvement;
-				break;
-			case LEFT:
-				this.x = this.x - coefficientMouvement;
-				break;
-			case TOP:
-				this.y = this.y - coefficientMouvement;
-				break;
-		}
 	}
 
 	//verifie si la fusée a touché un coté de l'ecran

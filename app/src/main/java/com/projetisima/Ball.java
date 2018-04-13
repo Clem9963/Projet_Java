@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import static java.lang.Math.*;
 
@@ -38,8 +39,9 @@ class Ball
 	private final Context mContext;
 
 	// Constructeur de la balle
-	public Ball(final Context c)
-	{
+	public Ball(final Context c, int width, int height) {
+	    this.widthScreen = width;
+	    this.heightScreen = height;
 		this.mContext = c;
 	}
 
@@ -134,12 +136,14 @@ class Ball
 	//verifie si la balle a touché un coté de l'ecran
 	public boolean outScreen(){
 		if(this.x + this.widthBall > this.widthScreen || this.x <= 0) {
+			Log.d("balle", "outscrennX, x + :" + (this.x + this.widthBall) + "widthscreen" + this.widthScreen);
 			return true;
 		}
 
 		if(this.y + this.heightBall > this.heightScreen || this.y <= 0) {
 			return true;
 		}
+
 		return false;
 	}
 

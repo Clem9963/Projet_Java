@@ -11,7 +11,6 @@ import android.widget.EditText;
 public class Menu extends AppCompatActivity {
     Button score = null;
     Button play = null;
-    EditText pseudo = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +19,7 @@ public class Menu extends AppCompatActivity {
 
         score =  findViewById(R.id.score);
         play =  findViewById(R.id.play);
-        pseudo =  findViewById(R.id.pseudo);
-    
+
         play.setOnClickListener(playListener);
         score.setOnClickListener(scoreListener);
     }
@@ -30,13 +28,6 @@ public class Menu extends AppCompatActivity {
     private View.OnClickListener playListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String p = pseudo.getText().toString();
-
-            SharedPreferences preferences = getSharedPreferences("parametres", 0);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("pseudo", p);
-            editor.commit();
-
             Intent intent = new Intent(Menu.this, MainActivity.class);
             startActivity(intent);
         }

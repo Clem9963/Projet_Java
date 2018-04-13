@@ -11,7 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
 	Timer t;
 	TimerTask task;
 	int secondes = 0;
-	int secondesTotal = 0;
 
 	private GameView gameView;
 	private Ball player;
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		//met le jeu en plein écran
+		int pleinEcran = WindowManager.LayoutParams.FLAG_FULLSCREEN ;
+		getWindow().setFlags(pleinEcran,pleinEcran);
 
 		//recuperation de la dimension de l'ecran pour la fournir au gameView
 		DisplayMetrics dimensions;
@@ -127,28 +132,12 @@ public class MainActivity extends AppCompatActivity {
 
 					@Override
 					public void run() {
-						score.setScore(secondesTotal); // affiche le temps de jeu
+						score.setScore(secondes); // affiche le score
 
 						//si l'activité est au premier plan
 						if(MainActivity.this.getWindow().getDecorView().getRootView().isShown()){
-                            //l'augmentation de la difficulté ce fait dans le for
-						    for(int i = 0; i < secondesTotal; i = i + 5)
-                            {
-                                gameView.addRocket();
-                            }
-
-							if (secondes == 5) {
-								Log.d("test", "lancement fusée");
-								gameView.addRocket();
-								t.cancel();
-								task.cancel();
-								secondes = 0;
-								startTimer();
-							} else {
-								Log.d("test", "t = " + secondes);
-								secondes++;
-								secondesTotal++;
-							}
+						    difficultyManager();
+						    secondes++;
 						}
 						//sinon on arrete le temps de jeu
 						else
@@ -192,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
 
 				//met les temps à 0
 				secondes = 0;
-				secondesTotal = 0;
 				score.setScore(0);
 				startTimer();
 			}
@@ -224,4 +212,117 @@ public class MainActivity extends AppCompatActivity {
         m.close();
     }
 
+    private void difficultyManager(){
+        if(secondes < 10){
+            if(secondes % 2 == 0) {
+                gameView.addRocketA(Directions.RIGHT); // definit arbitrairement
+            }
+            return;
+        }
+        else if(secondes < 20)
+        {
+            gameView.addRocketA(Directions.RIGHT, Directions.LEFT); // definit arbitrairement
+            return;
+        }
+        else if (secondes < 30)
+        {
+            gameView.addRocketA();
+            return;
+        }
+        else if(secondes < 40)
+        {
+            gameView.addRocketA();
+            if(secondes % 2 == 0)
+            {
+                gameView.addRocketA();
+            }
+            return;
+        }
+        else if (secondes < 50)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            return;
+        }
+        else if(secondes < 60)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+
+            if(secondes % 2 == 0)
+            {
+                gameView.addRocketB();
+            }
+            return;
+        }
+        else if (secondes < 70)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+            return;
+        }
+        else if (secondes < 80)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+
+            if(secondes % 2 == 0)
+            {
+                gameView.addRocketB();
+            }
+            return;
+        }
+        else if(secondes < 90)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            return;
+        }
+        else if(secondes < 100)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            gameView.addRocketC(Directions.LEFT);  //definit arbitrairement
+            return;
+        }
+        else if(secondes < 120)
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            gameView.addRocketC();
+            gameView.addRocketC();
+            return;
+        }
+        else // le joueur tient plus de 2 min
+        {
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketA();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            gameView.addRocketB();
+            gameView.addRocketC();
+            gameView.addRocketC();
+            for(int i = 20; i < secondes - 120; i = i + 20){
+                gameView.addRocketA();
+                gameView.addRocketB();
+                gameView.addRocketC();
+            }
+            return;
+        }
+    }
 }

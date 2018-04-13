@@ -1,13 +1,17 @@
 package com.projetisima;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
@@ -16,9 +20,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private ArrayList<Integer> startPossibleX = new ArrayList<>();
 	private ArrayList<Integer> startPossibleY = new ArrayList<>();
 
+    //image dde fond
+    private BitmapDrawable background = null;
+
 	private int widthScreen;
 	private int heightScreen;
 
+	private Context context;
 	private GameLoop gameLoopThread;
 	private Ball balle;
 	private Border border;
@@ -27,6 +35,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private final static int widthRocket = 30;
 	private final static int heightRocket = 40;
+
+    Random r = new Random();
 
 	public static double distance(int aX, int aY, int bX, int bY) {
 		return Math.sqrt(Math.pow((double)(aX-bX), 2.) + Math.pow((double)(aY-bY), 2.));
@@ -37,10 +47,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		super(context);
 		getHolder().addCallback(this);
 
+		this.context = context;
 		this.widthScreen = width;
-		this.heightScreen = height - 76;			// TODO : Constante (76) mise à la zob pour pallier la barre de notifications, A modifier rapidement !!
+		this.heightScreen = height;
 
-		balle = new Ball(this.getContext());
+		balle = new Ball(this.getContext(), width, height);
 		border = new Border(this.getContext(), widthScreen, heightScreen);
 		rockets = new ArrayList();
 
@@ -54,6 +65,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		this.score = new Score();
+
+        //charge l'image de fond
+        this.background = setImage(this.context, R.drawable.footballground, this.widthScreen, this.heightScreen);
 	}
 
 	//recupere la balle pour pouvoir ensuite changer ses coordonnées et ainsi la déplacer
@@ -72,36 +86,78 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	//ajoute une fusée a la liste des fusées
-	public void addRocket(){
-		//gestion de la direction aléatoire
-		Random r = new Random();
+	//ajoute une fusée de type A a la liste des fusées
+	public void addRocketA(){
 		Directions d = Directions.values()[r.nextInt(4)];
-		int x = 0, y = 0;
-
-		//recuperation des coordonnées de départ suivant la direction
-		switch (d){
-			case RIGHT:
-				x = 0;
-				y = startPossibleY.get(r.nextInt(startPossibleY.size()));
-				break;
-			case BOTTOM:
-				x = startPossibleX.get(r.nextInt(startPossibleX.size()));
-				y = 0;
-				break;
-			case LEFT:
-				x = widthScreen;
-				y = startPossibleY.get(r.nextInt(startPossibleY.size()));
-				break;
-			case TOP:
-				x = startPossibleX.get(r.nextInt(startPossibleX.size()));
-				y = heightScreen;
-				break;
-		}
-
-		Log.d("rocket param", "direction : " + d + " x = " + x + ", y : " + y);
-		this.rockets.add(new Rocket(this.getContext(), d, x, y, widthScreen, heightScreen));
+		addRocket(d, TypeRocket.A);
 	}
+
+	public void addRocketA(Directions d) {
+	    addRocket(d, TypeRocket.A);
+    }
+
+    public void addRocketA(Directions d1, Directions d2){
+        if(r.nextInt(2) == 0){
+            addRocket(d1, TypeRocket.A);
+        }
+        else {
+            addRocket(d2, TypeRocket.A);
+        }
+    }
+
+    private void addRocket(Directions d, TypeRocket typeRocket){
+        int x = 0, y = 0;
+
+        //recuperation des coordonnées de départ suivant la direction
+        switch (d){
+            case RIGHT:
+                x = 0;
+                y = startPossibleY.get(r.nextInt(startPossibleY.size()));
+                break;
+            case BOTTOM:
+                x = startPossibleX.get(r.nextInt(startPossibleX.size()));
+                y = 0;
+                break;
+            case LEFT:
+                x = widthScreen;
+                y = startPossibleY.get(r.nextInt(startPossibleY.size()));
+                break;
+            case TOP:
+                x = startPossibleX.get(r.nextInt(startPossibleX.size()));
+                y = heightScreen;
+                break;
+        }
+
+        //ajoute la fusée suivant son type
+        Log.d("rocketA param", "direction : " + d + " x = " + x + ", y : " + y);
+        switch (typeRocket){
+            case A:
+                this.rockets.add(new RocketA(this.getContext(), d, x, y, widthScreen, heightScreen));
+                break;
+            case B:
+                this.rockets.add(new RocketB(this.getContext(), d, x, y, widthScreen, heightScreen));
+                break;
+            case C:
+                this.rockets.add(new RocketC(this.getContext(), d, x, y, widthScreen, heightScreen));
+                break;
+        }
+    }
+
+	//ajoute une fusée de type B a la liste des fusées
+	public void addRocketB(){
+		Directions d = Directions.values()[r.nextInt(4)];
+		addRocket(d, TypeRocket.B);
+	}
+
+	//ajoute une fusée de type C a la liste des fusées
+	public void addRocketC(){
+		Directions d = Directions.values()[r.nextInt(4)];
+		addRocket(d, TypeRocket.C);
+	}
+
+	public void addRocketC(Directions d){
+        addRocket(d, TypeRocket.C);
+    }
 
 	//verifie si la bille a touché une fusée
 	public boolean collision() {
@@ -119,12 +175,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		int centerBallX = balle.getX() + balle.getRadiusBall();
 		int centerBallY = balle.getY() + balle.getRadiusBall();
-
-		if ((topEdgeBallY < border.getyBorder()) || (bottomEdgeBallY > heightScreen - border.getyBorder()) ||
-				(leftEdgeBallX < border.getxBorder()) || (rightEdgeBallX > widthScreen - border.getxBorder())) {
-			Log.d("collision", "en bord d'écran");
-			return true;
-		}
 
 		for(int i = 0; i < rockets.size(); i++) {
 			int topLeftCornerRocketX = rockets.get(i).getX();
@@ -207,7 +257,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		// on efface l'écran, en blanc
-		canvas.drawColor(Color.WHITE);
+		//affiche l'image de fond
+        canvas.drawBitmap(this.background.getBitmap(), 0, 0, null);
 
 		// on dessine la balle
 		balle.draw(canvas);
@@ -235,7 +286,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		for(int i = 0; i < rockets.size(); i++) {
 			if(rockets.get(i).outScreen()){
 				rockets.remove(i);
-				Log.d("fusee draw", "la fusee supprime");
+				Log.d("fusee draw", "la fusee est supprimée");
 			}
 			else{
 				rockets.get(i).move();
@@ -278,4 +329,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			rockets.get(i).resize();
 		}
 	}
+
+    public BitmapDrawable setImage(final Context c, final int ressource, final int w, final int h) {
+        Drawable dr = c.getResources().getDrawable(ressource);
+        Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
+        return new BitmapDrawable(c.getResources(), Bitmap.createScaledBitmap(bitmap, w, h, true));
+    }
 }

@@ -11,17 +11,6 @@
         android:layout_weight="1"
         android:text="Vos scores" />
 
-    <EditText
-        android:id="@+id/pseudo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="Pseudo"
-        android:inputType="textPersonName"
-        android:textAlignment="center" />
-
     <Button
         android:id="@+id/play"
         android:layout_width="match_parent"
