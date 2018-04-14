@@ -133,20 +133,6 @@ class Ball
 		this.previousY = this.y;
 	}
 
-	//verifie si la balle a touché un coté de l'ecran
-	public boolean outScreen(){
-		if(this.x + this.widthBall > this.widthScreen || this.x <= 0) {
-			Log.d("balle", "outscrennX, x + :" + (this.x + this.widthBall) + "widthscreen" + this.widthScreen);
-			return true;
-		}
-
-		if(this.y + this.heightBall > this.heightScreen || this.y <= 0) {
-			return true;
-		}
-
-		return false;
-	}
-
 	// on dessine la bille
 	public void draw(Canvas canvas)
 	{

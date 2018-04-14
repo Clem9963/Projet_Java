@@ -75,14 +75,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		return this.balle;
 	}
 
-	//fonction qui permet de stopper le thread
+	//fonction qui permet de stopper le thread ou de le relancer
 	public void setRunningGameLoop(boolean b){
 		if(b == false) {
-			this.gameLoopThread.interrupt();
+			this.gameLoopThread.setRunning(false);
 		}
 		else
 		{
-			this.gameLoopThread.setRunning(true);
+            gameLoopThread = new GameLoop(this);
+            gameLoopThread.setRunning(true);
+            gameLoopThread.start();
 		}
 	}
 
@@ -161,6 +163,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	//verifie si la bille a touché une fusée
 	public boolean collision() {
+	    //verifie si la balle touhe une bordure
+        if(balle.getX() + balle.getWidth() + border.getXBorder() > this.widthScreen || balle.getX() <= border.getXBorder()) {
+            return true;
+        }
+        if(balle.getY() + balle.getHeight() + border.getYBorder() > this.heightScreen || balle.getY() <= border.getYBorder()) {
+            return true;
+        }
+
+	    //verifie si la balle touche une fusée
 		int topEdgeBallX = balle.getX() + balle.getRadiusBall();
 		int topEdgeBallY = balle.getY();
 
@@ -273,7 +284,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		Paint paint = new Paint();
 		paint.setColor(Color.BLACK);
 		paint.setTextSize(60);
-		canvas.drawText("Score : " + this.score.getScore(), 20, 50, paint);
+
+		//calcul la position du texte pour que celui ci soit centrer au milieu
+        int xPos = widthScreen / 2 - (int)(paint.measureText("Score : " + this.score.getScore())/2);
+        int yPos = (int) (border.getXBorder() / 2 - ((paint.descent() + paint.ascent()) / 2)) ;
+
+		canvas.drawText("Score : " + this.score.getScore(), xPos, yPos, paint);
 	}
 
 	public Score getScore(){

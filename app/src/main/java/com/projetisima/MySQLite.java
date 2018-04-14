@@ -8,6 +8,7 @@ public class MySQLite extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "db.sqlite";
     private static final int DATABASE_VERSION = 1;
+    public static final int sizeTable = 10;
     private static MySQLite sInstance;
 
     public static synchronized MySQLite getInstance(Context context) {

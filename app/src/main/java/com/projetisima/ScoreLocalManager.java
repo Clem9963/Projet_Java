@@ -10,10 +10,10 @@ public class ScoreLocalManager {
     public static final String KEY_ID = "id";
     public static final String KEY_DATE = "date";
     public static final String KEY_SCORE = "score";
-    public static final String CREATE_TABLE_SCORE_LOCAL = "CREATE TABLE " + TABLE_NAME+
+    public static final String CREATE_TABLE_SCORE_LOCAL = "CREATE TABLE " + TABLE_NAME +
             " (" +
-            " " + KEY_ID + " INTEGER primary key," +
-            " " + KEY_DATE + " INTEGER," +
+            " " + KEY_ID + " INTEGER," +
+            " " + KEY_DATE + " INTEGER primary key," +
             " " + KEY_SCORE + " INTEGER" +
             ");";
     private MySQLite maBaseSQLite; // notre gestionnaire du fichier SQLite
@@ -86,10 +86,13 @@ public class ScoreLocalManager {
         return a;
     }
 
+    //selectionne la 10eme valeur la plus faible
     public ScoreLocal getScoreLocalMin(){
         ScoreLocal a = new ScoreLocal(0, new Long(0), 0);
 
-        Cursor c = db.rawQuery("SELECT MIN(" + KEY_SCORE + "), " + KEY_ID + ", " + KEY_DATE + ", " + KEY_SCORE + " FROM " + TABLE_NAME, null);
+        String tableMax = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + KEY_SCORE + " DESC, " + KEY_DATE + " DESC LIMIT " + MySQLite.sizeTable;
+
+        Cursor c = db.rawQuery("SELECT MIN(" + KEY_SCORE + "), " + KEY_ID + ", " + KEY_DATE + ", " + KEY_SCORE + " FROM (" + tableMax + ")", null);
         if (c.moveToFirst()) {
             a.setId(c.getInt(c.getColumnIndex(KEY_ID)));
             a.setDate(c.getLong(c.getColumnIndex(KEY_DATE)));
@@ -112,7 +115,7 @@ public class ScoreLocalManager {
 
     public Cursor getAllScoreLocal() {
         // sélection de tous les enregistrements de la table par ordre des scores et des dates
-        return db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + KEY_SCORE + " DESC, " + KEY_DATE + " DESC", null);
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME + " ORDER BY " + KEY_SCORE + " DESC, " + KEY_DATE + " DESC LIMIT " + MySQLite.sizeTable, null);
     }
 
 }

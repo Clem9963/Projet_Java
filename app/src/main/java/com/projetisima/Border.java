@@ -89,11 +89,12 @@ public class Border{
 		}
 	}
 
-	public int getxBorder() {
+	public int getXBorder() {
 		return xBorder;
 	}
 
-	public int getyBorder() {
+	public int getYBorder() {
 		return yBorder;
 	}
+
 }

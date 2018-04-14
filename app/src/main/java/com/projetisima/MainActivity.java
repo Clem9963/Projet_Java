@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,9 +21,12 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity {
 
 	private SensorManager mSensorManager; // pour recuperer les changements de l'acceleromètre
-    private final int sizeTable = 10;
 
 	float x, y; // les variables pour l'accéléromètre
+
+    //pour la musique
+    MediaPlayer musicPlayer;
+    MediaPlayer soundCollision;
 
 	Timer t;
 	TimerTask task;
@@ -39,6 +43,28 @@ public class MainActivity extends AppCompatActivity {
 		//met le jeu en plein écran
 		int pleinEcran = WindowManager.LayoutParams.FLAG_FULLSCREEN ;
 		getWindow().setFlags(pleinEcran,pleinEcran);
+
+		//lancement de la musique
+        musicPlayer = MediaPlayer.create(this, R.raw.musique);
+        //si le joueur arrive au bout de la musique, o la relance
+        musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                musicPlayer.seekTo(0);
+                musicPlayer.start();
+            }
+        });
+        musicPlayer.start(); // no need to call prepare(); create() does that for you
+
+        //chargement du bruit de collision
+        soundCollision = MediaPlayer.create(this, R.raw.explosion);
+        soundCollision.setVolume(40,40);
+        soundCollision.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                dialogBox(); //on affiche la boite de dialogue
+                player.placeMiddle();
+                gameView.removeAllRockets();
+            }
+        });
 
 		//recuperation de la dimension de l'ecran pour la fournir au gameView
 		DisplayMetrics dimensions;
@@ -65,6 +91,12 @@ public class MainActivity extends AppCompatActivity {
 	//si on appuie sur la touche retour pendant que l'on joue
 	@Override
 	public void onBackPressed() {
+	    if(musicPlayer.isPlaying()) {
+            musicPlayer.stop();
+        }
+        if(soundCollision.isPlaying()){
+	        soundCollision.stop();
+        }
 	    t.cancel();
 	    task.cancel();
         MainActivity.this.finish();
@@ -79,16 +111,20 @@ public class MainActivity extends AppCompatActivity {
 			y = se.values[1];
 
 			//si la bille est au bord de l'ecran alors le joueur a perdu
-			if(player.outScreen() || gameView.collision())
+			if(gameView.collision())
 			{
+			    //lance le bruit de collision
+                soundCollision.start();
+
+                //on stop la musique
+                musicPlayer.seekTo(0);
+                musicPlayer.pause();
+
 				//on arrete le temps
 				t.cancel();
 				task.cancel();
 				mSensorManager.unregisterListener(mSensorListener);//on bloque la reception de l'acceleromètre
 				gameView.setRunningGameLoop(false); //stoppe le thread = empeche les elements de se déplacer
-				dialogBox(); //on affiche la boite de dialogue
-				player.placeMiddle();
-				gameView.removeAllRockets();
 			}
 			//sinon la bille se déplace
 			else {
@@ -142,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 						//sinon on arrete le temps de jeu
 						else
 						{
+						    musicPlayer.stop();
 							t.cancel();
 							task.cancel();
 							MainActivity.this.finish();
@@ -159,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
         saveScoreLocal();
 
         //enregistrement du score dans la base de donnée distante si on peut
-
 
 		Activity activity = this; // récupération de l'Activity courante
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -182,6 +218,7 @@ public class MainActivity extends AppCompatActivity {
 				//met les temps à 0
 				secondes = 0;
 				score.setScore(0);
+				musicPlayer.start(); //relance la musique
 				startTimer();
 			}
 		});
@@ -199,12 +236,12 @@ public class MainActivity extends AppCompatActivity {
         ScoreLocal sc = m.getScoreLocalMin();
 
         //insertion si le score est superieur au score minimum
-        if(score.getScore() > sc.getScore() || m.getNbTables() <= sizeTable){
+        if(score.getScore() > sc.getScore() || m.getNbTables() < MySQLite.sizeTable){
             m.addScoreLocal(new ScoreLocal(0, millis, score.getScore()));
         }
 
         //suppression du score minimum si la table est remplit
-        if(m.getNbTables() > sizeTable)
+        if(m.getNbTables() > MySQLite.sizeTable)
         {
             m.removeScoreLocal(sc);
         }
@@ -212,6 +249,10 @@ public class MainActivity extends AppCompatActivity {
         m.close();
     }
 
+    //fonction qui gère la difficulté suivant le temps de jeu
+    //todo : surement ameliorer la gestion de la difficulte :
+    //car on a beaucoup de mal a atteindre le troisième type de fusée
+    //la fonction fait exactement ce qui est décrit dans le tableau des difficultés de la todo liste
     private void difficultyManager(){
         if(secondes < 10){
             if(secondes % 2 == 0) {
