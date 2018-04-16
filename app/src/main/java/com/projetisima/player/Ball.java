@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.player;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +9,9 @@ import android.util.Log;
 
 import static java.lang.Math.*;
 
-class Ball
+import com.projetisima.R;
+
+public class Ball
 {
 	//image de la balle
 	private BitmapDrawable img = null;

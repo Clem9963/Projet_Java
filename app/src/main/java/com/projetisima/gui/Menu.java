@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.gui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.projetisima.scores.*;
+import com.projetisima.game_system.*;
+import com.projetisima.R;
 
 public class Menu extends AppCompatActivity {
     Button score = null;

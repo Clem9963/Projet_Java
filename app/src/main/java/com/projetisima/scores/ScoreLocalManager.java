@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.scores;
 
 import android.content.ContentValues;
 import android.content.Context;

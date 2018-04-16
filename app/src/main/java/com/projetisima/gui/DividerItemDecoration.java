@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.gui;
 
 import android.content.Context;
 import android.content.res.TypedArray;

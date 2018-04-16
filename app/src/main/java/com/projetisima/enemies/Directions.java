@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.enemies;
 
 
 public enum Directions {

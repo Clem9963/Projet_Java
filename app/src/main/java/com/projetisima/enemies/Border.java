@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.enemies;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.util.Log;
 
 import static java.lang.Math.*;
+
+import com.projetisima.R;
 
 public class Border{
 	//images pour les bordures

@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.scores;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.scores;
 
 public class Person {
     private String pseudo;

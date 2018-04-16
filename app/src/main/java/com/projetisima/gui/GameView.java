@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.gui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
 
+import com.projetisima.player.*;
+import com.projetisima.enemies.*;
+import com.projetisima.game_system.*;
+import com.projetisima.scores.*;
+import com.projetisima.R;
+
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private ArrayList<Integer> startPossibleX = new ArrayList<>();
 	private ArrayList<Integer> startPossibleY = new ArrayList<>();
@@ -28,7 +34,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private Context context;
 	private GameLoop gameLoopThread;
-	private Ball balle;
+	private Ball player;
 	private Border border;
 	private ArrayList<Rocket> rockets; //tableau des fusées
 	private Score score; // pour la gestion du temps
@@ -51,7 +57,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		this.widthScreen = width;
 		this.heightScreen = height;
 
-		balle = new Ball(this.getContext(), width, height);
+		player = new Ball(this.getContext(), width, height);
 		border = new Border(this.getContext(), widthScreen, heightScreen);
 		rockets = new ArrayList();
 
@@ -72,7 +78,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	//recupere la balle pour pouvoir ensuite changer ses coordonnées et ainsi la déplacer
 	public Ball getBall(){
-		return this.balle;
+		return this.player;
 	}
 
 	//fonction qui permet de stopper le thread ou de le relancer
@@ -91,23 +97,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	//ajoute une fusée de type A a la liste des fusées
 	public void addRocketA(){
 		Directions d = Directions.values()[r.nextInt(4)];
-		addRocket(d, TypeRocket.A);
+		addRocket(d, RocketType.A);
 	}
 
 	public void addRocketA(Directions d) {
-	    addRocket(d, TypeRocket.A);
+	    addRocket(d, RocketType.A);
     }
 
     public void addRocketA(Directions d1, Directions d2){
         if(r.nextInt(2) == 0){
-            addRocket(d1, TypeRocket.A);
+            addRocket(d1, RocketType.A);
         }
         else {
-            addRocket(d2, TypeRocket.A);
+            addRocket(d2, RocketType.A);
         }
     }
 
-    private void addRocket(Directions d, TypeRocket typeRocket){
+    private void addRocket(Directions d, RocketType typeRocket){
         int x = 0, y = 0;
 
         //recuperation des coordonnées de départ suivant la direction
@@ -148,44 +154,44 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	//ajoute une fusée de type B a la liste des fusées
 	public void addRocketB(){
 		Directions d = Directions.values()[r.nextInt(4)];
-		addRocket(d, TypeRocket.B);
+		addRocket(d, RocketType.B);
 	}
 
 	//ajoute une fusée de type C a la liste des fusées
 	public void addRocketC(){
 		Directions d = Directions.values()[r.nextInt(4)];
-		addRocket(d, TypeRocket.C);
+		addRocket(d, RocketType.C);
 	}
 
 	public void addRocketC(Directions d){
-        addRocket(d, TypeRocket.C);
+        addRocket(d, RocketType.C);
     }
 
 	//verifie si la bille a touché une fusée
 	public boolean collision() {
 	    //verifie si la balle touhe une bordure
-        if(balle.getX() + balle.getWidth() + border.getXBorder() > this.widthScreen || balle.getX() <= border.getXBorder()) {
+        if(player.getX() + player.getWidth() + border.getXBorder() > this.widthScreen || player.getX() <= border.getXBorder()) {
             return true;
         }
-        if(balle.getY() + balle.getHeight() + border.getYBorder() > this.heightScreen || balle.getY() <= border.getYBorder()) {
+        if(player.getY() + player.getHeight() + border.getYBorder() > this.heightScreen || player.getY() <= border.getYBorder()) {
             return true;
         }
 
 	    //verifie si la balle touche une fusée
-		int topEdgeBallX = balle.getX() + balle.getRadiusBall();
-		int topEdgeBallY = balle.getY();
+		int topEdgeBallX = player.getX() + player.getRadiusBall();
+		int topEdgeBallY = player.getY();
 
-		int bottomEdgeBallX = balle.getX() + balle.getRadiusBall();
-		int bottomEdgeBallY = balle.getY() + balle.getHeight();
+		int bottomEdgeBallX = player.getX() + player.getRadiusBall();
+		int bottomEdgeBallY = player.getY() + player.getHeight();
 
-		int leftEdgeBallX = balle.getX();
-		int leftEdgeBallY = balle.getY() + balle.getRadiusBall();
+		int leftEdgeBallX = player.getX();
+		int leftEdgeBallY = player.getY() + player.getRadiusBall();
 
-		int rightEdgeBallX = balle.getX() + balle.getWidth();
-		int rightEdgeBallY = balle.getY() + balle.getRadiusBall();
+		int rightEdgeBallX = player.getX() + player.getWidth();
+		int rightEdgeBallY = player.getY() + player.getRadiusBall();
 
-		int centerBallX = balle.getX() + balle.getRadiusBall();
-		int centerBallY = balle.getY() + balle.getRadiusBall();
+		int centerBallX = player.getX() + player.getRadiusBall();
+		int centerBallY = player.getY() + player.getRadiusBall();
 
 		for(int i = 0; i < rockets.size(); i++) {
 			int topLeftCornerRocketX = rockets.get(i).getX();
@@ -241,19 +247,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 
 			/* Traitement de la collision de la balle avec les coins de la bounding box de la fusée */
-			if (distance(centerBallX, centerBallY, bottomLeftCornerRocketX, bottomLeftCornerRocketY) < balle.getRadiusBall()) {
+			if (distance(centerBallX, centerBallY, bottomLeftCornerRocketX, bottomLeftCornerRocketY) < player.getRadiusBall()) {
 				Log.d("collision", "coin bas gauche bounding box fusée");
 				return true;
 			}
-			else if (distance(centerBallX, centerBallY, bottomRightCornerRocketX, bottomRightCornerRocketY) < balle.getRadiusBall()) {
+			else if (distance(centerBallX, centerBallY, bottomRightCornerRocketX, bottomRightCornerRocketY) < player.getRadiusBall()) {
 				Log.d("collision", "coin bas droit bounding box fusée");
 				return true;
 			}
-			if (distance(centerBallX, centerBallY, topLeftCornerRocketX, topLeftCornerRocketY) < balle.getRadiusBall()) {
+			if (distance(centerBallX, centerBallY, topLeftCornerRocketX, topLeftCornerRocketY) < player.getRadiusBall()) {
 				Log.d("collision", "coin haut gauche bounding box fusée");
 				return true;
 			}
-			else if (distance(centerBallX, centerBallY, topRightCornerRocketX, topRightCornerRocketY) < balle.getRadiusBall()) {
+			else if (distance(centerBallX, centerBallY, topRightCornerRocketX, topRightCornerRocketY) < player.getRadiusBall()) {
 				Log.d("collision", "coin haut droit bounding box fusée");
 				return true;
 			}
@@ -271,8 +277,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		//affiche l'image de fond
         canvas.drawBitmap(this.background.getBitmap(), 0, 0, null);
 
-		// on dessine la balle
-		balle.draw(canvas);
+		// on dessine la balle et la bordure
+		player.draw(canvas);
 		border.draw(canvas);
 
 		//on dessine les fusées
@@ -339,7 +345,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	//definit la taille de la bille, des fusées et les dimensions de l'écran
 	@Override
 	public void surfaceChanged(SurfaceHolder surfaceHolder, int indice, int width, int height) {
-		balle.resize(width, height); // on définit la taille de la balle selon la taille de l'écran
+		player.resize(width, height); // on définit la taille de la balle selon la taille de l'écran
 		border.resize();
 		for(int i = 0; i < rockets.size(); i++){
 			rockets.get(i).resize();

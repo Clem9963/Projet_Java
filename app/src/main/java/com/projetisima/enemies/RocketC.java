@@ -1,8 +1,10 @@
-package com.projetisima;
+package com.projetisima.enemies;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+
+import com.projetisima.R;
 
 public class RocketC extends Rocket {
     private Directions directionFinale;

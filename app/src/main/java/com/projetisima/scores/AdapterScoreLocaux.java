@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.scores;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import com.projetisima.R;
 
 class AdapterScoreLocaux extends RecyclerView.Adapter<AdapterScoreLocaux.MyViewHolder> {
 

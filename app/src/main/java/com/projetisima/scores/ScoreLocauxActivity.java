@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.scores;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +11,9 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.projetisima.gui.*;
+import com.projetisima.R;
 
 public class ScoreLocauxActivity extends AppCompatActivity{
 

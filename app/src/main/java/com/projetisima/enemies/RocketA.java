@@ -1,6 +1,8 @@
-package com.projetisima;
+package com.projetisima.enemies;
 
 import android.content.Context;
+
+import com.projetisima.R;
 
 public class RocketA extends Rocket {
 

@@ -1,6 +1,8 @@
-package com.projetisima;
+package com.projetisima.game_system;
 
 import android.graphics.Canvas;
+
+import com.projetisima.gui.*;
 
 public class GameLoop extends Thread
 {

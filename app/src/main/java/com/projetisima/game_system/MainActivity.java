@@ -1,4 +1,4 @@
-package com.projetisima;
+package com.projetisima.game_system;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -17,6 +17,12 @@ import android.view.WindowManager;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.projetisima.enemies.*;
+import com.projetisima.player.*;
+import com.projetisima.gui.*;
+import com.projetisima.scores.*;
+import com.projetisima.R;
 
 public class MainActivity extends AppCompatActivity {
 
