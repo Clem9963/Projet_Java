@@ -60,6 +60,12 @@ public class Menu extends AppCompatActivity {
             SharedPreferences membres = getSharedPreferences("membres", 0);
             membres.edit().clear().commit();
 
+            //suppression des scores locaux
+            ScoreLocalManager m = new ScoreLocalManager(Menu.this); // gestionnaire de la table "animal"
+            m.open(); // ouverture de la table en lecture/écriture
+            m.clearAllScores();
+            m.close();
+
             //retour a la page de connexion
             Intent intent = new Intent(Menu.this, Connexion.class);
             Menu.this.finish();

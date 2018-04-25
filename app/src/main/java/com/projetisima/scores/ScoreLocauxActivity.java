@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class ScoreLocauxActivity extends AppCompatActivity{
         setContentView(R.layout.activity_score_locaux);
 
         // afficher fleche de retour
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -46,8 +47,6 @@ public class ScoreLocauxActivity extends AppCompatActivity{
 
         //recupere les high score de la base de donnée
         loadHighScore();
-
-        mAdapter.notifyDataSetChanged();
     }
 
     //pour la clique sur la flèche retour
@@ -86,5 +85,7 @@ public class ScoreLocauxActivity extends AppCompatActivity{
 
         // fermeture du gestionnaire
         m.close();
+
+        mAdapter.notifyDataSetChanged();
     }
 }

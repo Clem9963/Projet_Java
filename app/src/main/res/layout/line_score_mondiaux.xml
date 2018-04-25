@@ -19,14 +19,14 @@
 
         <TextView
             android:id="@+id/pseudo"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textAlignment="center" />
 
         <TextView
             android:id="@+id/date"
-            android:layout_width="240dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textAlignment="center" />

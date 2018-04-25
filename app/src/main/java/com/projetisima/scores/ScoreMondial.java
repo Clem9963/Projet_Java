@@ -15,9 +15,7 @@ public class ScoreMondial {
         this.pseudo = pseudo;
     }
 
-    public int getId(){
-        return this.id;
-    }
+    public int getId(){ return this.id;}
 
     public void setId(int id){
         this.id = id;

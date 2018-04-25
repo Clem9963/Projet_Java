@@ -290,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<BDD>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Connexion au serveur impossible", Toast.LENGTH_LONG).show();
-                Log.d("ERROR", t.getMessage());
             }
         });
     }

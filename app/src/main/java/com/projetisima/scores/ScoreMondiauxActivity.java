@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -53,8 +54,6 @@ public class ScoreMondiauxActivity extends AppCompatActivity{
 
         //recupere les high score de la base de donnée
         loadHighScoreRetrofit();
-
-        mAdapter.notifyDataSetChanged();
     }
 
     //pour la clique sur la flèche retour
@@ -85,14 +84,14 @@ public class ScoreMondiauxActivity extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     int nbScore = Integer.parseInt(response.body().get(0).getNbScores());
 
-                    for(int i = 1; i < nbScore; i++)
+                    for(int i = 1; i <= nbScore; i++)
                     {
                         listScoreMondiaux.add(new ScoreMondial(i,
                                 response.body().get(i).getDateScore(),
                                 response.body().get(i).getScore(),
                                 response.body().get(i).getPseudo()));
-                        //todo ajouter les pseudos
                     }
+                    mAdapter.notifyDataSetChanged();
                 }
             }
 
