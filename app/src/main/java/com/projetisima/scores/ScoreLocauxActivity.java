@@ -33,7 +33,7 @@ public class ScoreLocauxActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // On récupère toutes les vues dont on a besoin
-        highScore = (RecyclerView) findViewById(R.id.highScore);
+        highScore = findViewById(R.id.highScore);
 
         //affichage de l'adapter
         mAdapter = new AdapterScoreLocaux(listScoreLocaux);

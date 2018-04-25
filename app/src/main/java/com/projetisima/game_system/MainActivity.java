@@ -2,6 +2,8 @@ package com.projetisima.game_system;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -13,16 +15,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.projetisima.BDD;
 import com.projetisima.enemies.*;
 import com.projetisima.player.*;
 import com.projetisima.gui.*;
 import com.projetisima.scores.*;
 import com.projetisima.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -202,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         saveScoreLocal();
 
         //enregistrement du score dans la base de donnée distante si on peut
+        saveScoreServer();
 
 		Activity activity = this; // récupération de l'Activity courante
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -231,6 +247,53 @@ public class MainActivity extends AppCompatActivity {
 
 		builder.show();
 	}
+
+	private void saveScoreServer(){
+        ScoreLocalManager m = new ScoreLocalManager(this); // gestionnaire de la table "animal"
+        m.open(); // ouverture de la table en lecture/écriture
+
+        //recuperation du score minimum
+        ScoreLocal sc = m.getScoreMax();
+
+        //si le meilleur score est celui qu'il vient de faire
+        //alors on l'envoit au serveur si il y a de la connexion
+        if(sc.getScore() == score.getScore())
+        {
+            if(BDD.isConnectedInternet(MainActivity.this))
+            {
+                sendScoreRetrofit(sc.getScore(), sc.getDate()/1000);
+            }
+        }
+        m.close();
+    }
+
+    private void sendScoreRetrofit(int score, long date) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BDD.URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        //recuperation des elements à envoyer
+        SharedPreferences preferences = getSharedPreferences("membres", 0);
+        String pseudo = preferences.getString("pseudo", "");
+        String mdp = preferences.getString("mdp", "");
+
+        BDD.script service = retrofit.create(BDD.script.class);
+        service.sendScore("sendScore", pseudo, mdp, String.valueOf(score), String.valueOf(date)).enqueue(new Callback<List<BDD>>() {
+            @Override
+            public void onResponse(Call<List<BDD>> call, Response<List<BDD>> response) {
+                if (response.body().get(0).getErreur().equals("impossible")) {
+                    Toast.makeText(getApplicationContext(), "Une erreur est survenue, le score n'a pas été enregistré", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<BDD>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Connexion au serveur impossible", Toast.LENGTH_LONG).show();
+                Log.d("ERROR", t.getMessage());
+            }
+        });
+    }
 
 	private void saveScoreLocal(){
         ScoreLocalManager m = new ScoreLocalManager(this); // gestionnaire de la table "animal"

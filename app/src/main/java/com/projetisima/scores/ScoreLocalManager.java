@@ -103,6 +103,20 @@ public class ScoreLocalManager {
         return a;
     }
 
+    public ScoreLocal getScoreMax(){
+        ScoreLocal a = new ScoreLocal(0, new Long(0), 0);
+
+        Cursor c = db.rawQuery("SELECT MAX(" + KEY_SCORE + "), " + KEY_DATE + ", " + KEY_SCORE + " FROM (" + TABLE_NAME + ")", null);
+        if (c.moveToFirst()) {
+            a.setId(0);
+            a.setDate(c.getLong(c.getColumnIndex(KEY_DATE)));
+            a.setScore(c.getInt(c.getColumnIndex(KEY_SCORE)));
+            c.close();
+        }
+
+        return a;
+    }
+
     public int getNbTables(){
         Cursor c = db.rawQuery("SELECT COUNT(*) as nb FROM " + TABLE_NAME, null);
         int nb = 0;
@@ -111,6 +125,10 @@ public class ScoreLocalManager {
             c.close();
         }
         return nb;
+    }
+
+    public void clearAllScores(){
+        db.delete(TABLE_NAME, null, null);
     }
 
     public Cursor getAllScoreLocal() {

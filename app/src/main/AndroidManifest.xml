@@ -4,6 +4,8 @@
 
     <uses-feature android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".gui.Menu">
+        <activity android:name=".gui.Connexion">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,6 +26,15 @@
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".scores.ScoreLocauxActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".scores.ScoreMondiauxActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".gui.Inscription"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".gui.Menu"
             android:screenOrientation="portrait">
         </activity>
     </application>
