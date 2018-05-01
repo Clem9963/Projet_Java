@@ -7,7 +7,7 @@ import com.projetisima.gui.*;
 public class GameLoop extends Thread
 {
 
-	// on définit arbitrairement le nombre d'images par secondes à 30
+	// on définit arbitrairement le nombre d'images par secondes à 60
 	private final static int FRAMES_PER_SECOND = 60;
 
 	// si on veut X images en 1 seconde, soit en 1000 ms,

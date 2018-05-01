@@ -63,6 +63,7 @@ public class Rocket{
 		//met l'image dans le bon sens en fonction de la direction de la fusée
 		//par defaut l'image de la fusée est dirigée vers le haut
 		Matrix mat = new Matrix();
+		int tempHeight = 0;
 
 		switch (this.direction) {
 			case RIGHT:
@@ -80,6 +81,12 @@ public class Rocket{
 		// definition de la taille de la fusée
 		widthRocket = bmp.getWidth();
 		heightRocket = bmp.getHeight();
+
+		if (this.direction == Directions.LEFT || this.direction == Directions.RIGHT) {
+			tempHeight = this.heightRocket;
+			this.heightRocket = this.widthRocket;
+			this.widthRocket = tempHeight;
+		}
 	}
 
 	//verifie si la fusée a touché un coté de l'ecran

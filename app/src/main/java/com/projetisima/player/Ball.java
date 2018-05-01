@@ -33,9 +33,9 @@ public class Ball
 >>>>>>> c5d2926... Amélioration légère de la physique de la balle.
 
 	private final int divisionBall = 10;						// Coefficient pour choisir la taille de la bille
-	private final int sensoryCoefficient = 5;					// Coefficient pour appréhender les valeurs fournies par l'accéléromètre
-	private final float inertiaCoefficient = 0.3f;				// Coefficient pour l'inertie
-	private final float dispersionCoefficient = 1.5f;	// Coefficient pour la dispersion de l'inertie
+	private final int sensoryCoefficient = 4;					// Coefficient pour appréhender les valeurs fournies par l'accéléromètre
+	private final float inertiaCoefficient = 0.2f;				// Coefficient pour l'inertie
+	private final float dispersionCoefficient = 2f;	// Coefficient pour la dispersion de l'inertie
 
 	//contexte de l'application pour récuperer les images notamment
 	private final Context mContext;

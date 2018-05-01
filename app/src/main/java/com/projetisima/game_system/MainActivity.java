@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 			x = se.values[0];
 			y = se.values[1];
 
-			//si la bille est au bord de l'ecran alors le joueur a perdu
+			//si la bille génère une collision, alors le joueur a perdu
 			if(gameView.collision())
 			{
 			    //lance le bruit de collision
@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
     //fonction qui gère la difficulté suivant le temps de jeu
     //todo : surement ameliorer la gestion de la difficulte :
     //car on a beaucoup de mal a atteindre le troisième type de fusée
-    //la fonction fait exactement ce qui est décrit dans le tableau des difficultés de la todo liste
+    //la fonction fait exactement ce qui est décrit dans la time line de la difficulté
     private void difficultyManager(){
         if(secondes < 10){
             if(secondes % 2 == 0) {
