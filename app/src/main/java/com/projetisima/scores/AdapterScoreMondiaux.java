@@ -8,8 +8,6 @@ import android.widget.TextView;
 
 import com.projetisima.R;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 
 class AdapterScoreMondiaux extends RecyclerView.Adapter<AdapterScoreMondiaux.MyViewHolder> {

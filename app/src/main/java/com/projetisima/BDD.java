@@ -11,38 +11,43 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Query;
-import retrofit2.http.GET;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.POST;
 
 public class BDD {
-    public static final String URL = "http://projetisima.alwaysdata.net/";
+    public static final String URL = "https://projetisima.alwaysdata.net/";
     private static final String DOSSIER_URL = "script.php";
 
     //tous les scripts pour se connecter a la base de donnee et envoi de donnee se trouvent ci après
     public interface script {
         //pour demander la connexion du joueur
-        @GET(DOSSIER_URL)
-        Call<List<BDD>> connexion(@Query("parametre") String field1,
-                                  @Query("pseudo") String field2,
-                                  @Query("mdp") String field3);
+        @FormUrlEncoded
+        @POST(DOSSIER_URL)
+        Call<List<BDD>> connexion(@Field("parametre") String field1,
+                                  @Field("pseudo") String field2,
+                                  @Field("mdp") String field3);
 
         //inscription d'un nouveau membre
-        @GET(DOSSIER_URL)
-        Call<List<BDD>> inscription(@Query("parametre") String field1,
-                                    @Query("pseudo") String field2,
-                                    @Query("mdp") String field3);
+        @FormUrlEncoded
+        @POST(DOSSIER_URL)
+        Call<List<BDD>> inscription(@Field("parametre") String field1,
+                                    @Field("pseudo") String field2,
+                                    @Field("mdp") String field3);
 
         //envoi le  score
-        @GET(DOSSIER_URL)
-        Call<List<BDD>> sendScore(@Query("parametre") String field1,
-                                  @Query("pseudo") String field2,
-                                  @Query("mdp") String field3,
-                                  @Query("score") String field4,
-                                  @Query("date") String field5);
+        @FormUrlEncoded
+        @POST(DOSSIER_URL)
+        Call<List<BDD>> sendScore(@Field("parametre") String field1,
+                                  @Field("pseudo") String field2,
+                                  @Field("mdp") String field3,
+                                  @Field("score") String field4,
+                                  @Field("date") String field5);
 
         //récupere les meilleures score du monde entier
-        @GET(DOSSIER_URL)
-        Call<List<BDD>> getHighScore(@Query("parametre") String field1);
+        @FormUrlEncoded
+        @POST(DOSSIER_URL)
+        Call<List<BDD>> getHighScore(@Field("parametre") String field1);
 
     }
 

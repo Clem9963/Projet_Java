@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Random;
 import java.lang.Math;
