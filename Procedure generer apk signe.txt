@@ -1,0 +1,15 @@
+Voici la procédure pour générer un apk signé :
+dans android studio, une fois qu'on a l'application attendue,
+dans build, 
+generate signed apk,
+dans key store path : choose existing et faut rechercher le fichier keyStore.jks qui se trouve dans le dossier du projet
+dans key store password mettre azerty01*
+dans alias mettre key
+dans password mettre azerty01*
+cliquer sur next
+coher V1 et V2
+cliquer sur finish
+l'apk généré se trouve dans app/release/
+et le nom ressemble à un true comme ceci : app-release.apk
+
+Voila voila c'est fini
