@@ -1,0 +1,7 @@
+site alwaysdata.net
+
+login : projetisima@gmail.com
+mdp : azerty01*
+
+ftp pareil
+base de donnée pareil
