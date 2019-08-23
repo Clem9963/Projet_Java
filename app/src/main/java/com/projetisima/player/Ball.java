@@ -15,21 +15,11 @@ public class Ball
 	//image de la balle
 	private BitmapDrawable img = null;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	private int x = 0, y = 0; 				// coordonnées du coin supérieur gauche la balle
-=======
-	private int x = 1, y = 1; //coordonnées de la balle
->>>>>>> 13cc31a... Correction du bug du recommencer lors du démarrage de jeu
-	private int widthBall, heightBall, radiusBall; //taille de la balle
-	private int widthScreen, heightScreen; //taille de l'ecran
-=======
 	private int x = 1, y = 1;						// Coordonnées de la balle
 	private int previousX = 1, previousY = 1;		// Précédentes coordonnées de la balle
 	private int inertiaX = 0, inertiaY = 0;			// Inertie de la bille
 	private int widthBall, heightBall, radiusBall;	// Taille de la balle
 	private int widthScreen, heightScreen;			// Taille de l'ecran
->>>>>>> c5d2926... Amélioration légère de la physique de la balle.
 
 	private final int divisionBall = 10;						// Coefficient pour choisir la taille de la bille
 	private final int sensoryCoefficient = 4;					// Coefficient pour appréhender les valeurs fournies par l'accéléromètre
